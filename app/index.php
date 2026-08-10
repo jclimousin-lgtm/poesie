@@ -45,6 +45,8 @@ input[type=text] { padding: 0.4rem; width: 300px; }
 
 <h1>Catalogue de travail — corpus de textes</h1>
 
+<p><a href="soumissions.php">→ Soumissions externes à modérer</a></p>
+
 <div class="stats">
 <div class="stat"><strong><?= $total ?></strong>documents inventoriés</div>
 <div class="stat"><strong><?= $recuperes ?></strong>textes récupérés</div>

@@ -20,6 +20,10 @@ function poesie_nav_html(string $slugActif = ''): string
         $lien = $c['slug'] === 'series' ? 'series.php' : 'categorie.php?slug=' . urlencode($c['slug']);
         $html .= '<a href="' . h($lien) . '"' . ($slugActif === $c['slug'] ? ' class="actif"' : '') . '>' . h($c['nom']) . '</a> ';
     }
+    // Contributions externes — lien fixe, hors arborescence éditoriale validée
+    // (ne provient jamais de la table `categories`, jamais mélangé au corpus fondateur).
+    $html .= '<a href="contributions.php"' . ($slugActif === 'contributions' ? ' class="actif"' : '') . '>Contributions</a> ';
+    $html .= '<a href="proposer.php"' . ($slugActif === 'proposer' ? ' class="actif"' : '') . '>Proposer un texte</a> ';
     return $html . '</nav>';
 }
 
