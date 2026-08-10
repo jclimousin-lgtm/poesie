@@ -7,7 +7,7 @@ require __DIR__ . '/_layout.php';
 $pdo = poesie_db();
 $q = trim((string) ($_GET['q'] ?? ''));
 
-$sql = "SELECT id_interne, titre, dossier_parent FROM documents WHERE statut_import IN ('importe','importe_partiellement')";
+$sql = "SELECT id_interne, titre, auteur FROM documents WHERE statut_publication = 'publie'";
 $params = [];
 if ($q !== '') {
     $sql .= ' AND titre LIKE :q';
@@ -43,7 +43,7 @@ $documents = $stmt->fetchAll();
 
 <ul class="index-list">
 <?php foreach ($documents as $d): ?>
-<li><a class="titre-lien" href="fiche.php?id=<?= h($d['id_interne']) ?>"><span><?= h($d['titre']) ?></span> <span class="meta"><?= h($d['dossier_parent']) ?></span></a></li>
+<li><a class="titre-lien" href="fiche.php?id=<?= h($d['id_interne']) ?>"><span><?= h($d['titre']) ?></span> <span class="meta"><?= h((string) $d['auteur']) ?></span></a></li>
 <?php endforeach; ?>
 </ul>
 

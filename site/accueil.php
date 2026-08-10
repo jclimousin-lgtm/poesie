@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/_layout.php';
 
 $pdo = poesie_db();
-$total = (int) $pdo->query("SELECT COUNT(*) FROM documents WHERE statut_import IN ('importe','importe_partiellement')")->fetchColumn();
+$total = (int) $pdo->query("SELECT COUNT(*) FROM documents WHERE statut_publication = 'publie'")->fetchColumn();
 $categories = poesie_categories();
 ?>
 <!doctype html>

@@ -18,11 +18,11 @@ if ($categorie === false) {
 }
 
 $stmt = $pdo->prepare(
-    'SELECT d.id_interne, d.titre, d.dossier_parent
+    "SELECT d.id_interne, d.titre, d.auteur
      FROM documents d
      JOIN document_categories dc ON dc.id_interne = d.id_interne
-     WHERE dc.categorie_slug = :slug
-     ORDER BY d.titre ASC'
+     WHERE dc.categorie_slug = :slug AND d.statut_publication = 'publie'
+     ORDER BY d.titre ASC"
 );
 $stmt->execute(['slug' => $slug]);
 $documents = $stmt->fetchAll();
@@ -49,7 +49,7 @@ $documents = $stmt->fetchAll();
 <?php else: ?>
 <ul class="index-list">
 <?php foreach ($documents as $d): ?>
-<li><a class="titre-lien" href="fiche.php?id=<?= h($d['id_interne']) ?>"><span><?= h($d['titre']) ?></span> <span class="meta"><?= h($d['dossier_parent']) ?></span></a></li>
+<li><a class="titre-lien" href="fiche.php?id=<?= h($d['id_interne']) ?>"><span><?= h($d['titre']) ?></span> <span class="meta"><?= h((string) $d['auteur']) ?></span></a></li>
 <?php endforeach; ?>
 </ul>
 <p class="compte"><?= count($documents) ?> texte(s) dans cette catégorie.</p>

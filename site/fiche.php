@@ -7,7 +7,7 @@ require __DIR__ . '/_layout.php';
 $id = trim((string) ($_GET['id'] ?? ''));
 
 $pdo = poesie_db();
-$stmt = $pdo->prepare('SELECT * FROM documents WHERE id_interne = :id');
+$stmt = $pdo->prepare("SELECT * FROM documents WHERE id_interne = :id AND statut_publication = 'publie'");
 $stmt->execute(['id' => $id]);
 $doc = $stmt->fetch();
 
@@ -34,7 +34,9 @@ $stmtSer->execute(['id' => $id]);
 $series = $stmtSer->fetchAll();
 
 $contenu = null;
-if ($doc['contenu_fichier_local'] !== null) {
+if ($doc['contenu_inline'] !== null) {
+    $contenu = $doc['contenu_inline'];
+} elseif ($doc['contenu_fichier_local'] !== null) {
     $chemin = __DIR__ . '/../../poesie-corpus-prive/' . $doc['contenu_fichier_local'];
     if (is_file($chemin)) {
         $contenu = file_get_contents($chemin);
@@ -62,6 +64,9 @@ $doublons = $doc['doublon_info'] !== null ? json_decode($doc['doublon_info'], tr
 <header class="lecture-entete">
 <p class="kicker"><?= h($doc['dossier_parent']) ?></p>
 <h1><?= h($doc['titre']) ?></h1>
+<?php if (!empty($doc['auteur'])): ?>
+<p class="lecture-auteur">par <?= h($doc['auteur']) ?></p>
+<?php endif; ?>
 <?php if ($categories !== [] || $series !== []): ?>
 <div class="pastilles">
 <?php foreach ($categories as $c): ?>

@@ -8,11 +8,11 @@ $pdo = poesie_db();
 $series = $pdo->query('SELECT id, nom FROM series ORDER BY nom ASC')->fetchAll();
 
 $stmtMembres = $pdo->prepare(
-    'SELECT d.id_interne, d.titre
+    "SELECT d.id_interne, d.titre
      FROM documents d
      JOIN document_series ds ON ds.id_interne = d.id_interne
-     WHERE ds.serie_id = :serie_id
-     ORDER BY ds.position ASC'
+     WHERE ds.serie_id = :serie_id AND d.statut_publication = 'publie'
+     ORDER BY ds.position ASC"
 );
 ?>
 <!doctype html>
