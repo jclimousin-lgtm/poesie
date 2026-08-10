@@ -23,28 +23,35 @@ $documents = $stmt->fetchAll();
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tous les textes</title>
+<title>Tous les textes — Corpus</title>
 <style><?= POESIE_STYLE ?></style>
 </head>
 <body>
 
 <?= poesie_nav_html('liste') ?>
 
+<main class="page-large">
+
+<p class="kicker">Index</p>
 <h1>Tous les textes</h1>
 
-<form method="get">
+<form class="recherche" method="get">
 <input type="text" name="q" placeholder="Rechercher un titre..." value="<?= h($q) ?>">
 <button type="submit">Rechercher</button>
-<?php if ($q !== ''): ?> <a href="liste.php">réinitialiser</a><?php endif; ?>
+<?php if ($q !== ''): ?><a class="recherche-reset" href="liste.php">réinitialiser</a><?php endif; ?>
 </form>
 
-<ul class="textes">
+<ul class="index-list">
 <?php foreach ($documents as $d): ?>
-<li><a href="fiche.php?id=<?= h($d['id_interne']) ?>"><?= h($d['titre']) ?></a> <span class="meta">(<?= h($d['dossier_parent']) ?>)</span></li>
+<li><a class="titre-lien" href="fiche.php?id=<?= h($d['id_interne']) ?>"><span><?= h($d['titre']) ?></span> <span class="meta"><?= h($d['dossier_parent']) ?></span></a></li>
 <?php endforeach; ?>
 </ul>
 
-<p><?= count($documents) ?> texte(s).</p>
+<p class="compte"><?= count($documents) ?> texte(s).</p>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>

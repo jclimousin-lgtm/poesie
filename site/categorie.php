@@ -39,18 +39,25 @@ $documents = $stmt->fetchAll();
 
 <?= poesie_nav_html($slug) ?>
 
+<main class="page-large">
+
+<p class="kicker">Entrée thématique</p>
 <h1><?= h($categorie['nom']) ?></h1>
 
 <?php if ($documents === []): ?>
-<p><em>Aucun texte n'est encore rattaché à cette catégorie.</em></p>
+<p class="texte-indisponible">Aucun texte n'est encore rattaché à cette catégorie.</p>
 <?php else: ?>
-<ul class="textes">
+<ul class="index-list">
 <?php foreach ($documents as $d): ?>
-<li><a href="fiche.php?id=<?= h($d['id_interne']) ?>"><?= h($d['titre']) ?></a> <span class="meta">(<?= h($d['dossier_parent']) ?>)</span></li>
+<li><a class="titre-lien" href="fiche.php?id=<?= h($d['id_interne']) ?>"><span><?= h($d['titre']) ?></span> <span class="meta"><?= h($d['dossier_parent']) ?></span></a></li>
 <?php endforeach; ?>
 </ul>
-<p><?= count($documents) ?> texte(s) dans cette catégorie.</p>
+<p class="compte"><?= count($documents) ?> texte(s) dans cette catégorie.</p>
 <?php endif; ?>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>

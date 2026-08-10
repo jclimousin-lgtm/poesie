@@ -21,20 +21,27 @@ $contributions = $stmt->fetchAll();
 
 <?= poesie_nav_html('contributions') ?>
 
+<main class="page-large">
+
+<p class="kicker">Voix extérieures</p>
 <h1>Contributions</h1>
 <p>Textes proposés par des auteur·es extérieur·es, validés pour publication.</p>
 
 <?php if ($contributions === []): ?>
-<p><em>Aucune contribution publiée pour le moment.</em></p>
+<p class="texte-indisponible">Aucune contribution publiée pour le moment.</p>
 <?php else: ?>
-<ul class="textes">
+<ul class="index-list">
 <?php foreach ($contributions as $c): ?>
-<li><a href="contribution.php?id=<?= (int) $c['id'] ?>"><?= h($c['titre']) ?></a> <span class="meta">— <?= h($c['auteur_nom']) ?></span></li>
+<li><a class="titre-lien" href="contribution.php?id=<?= (int) $c['id'] ?>"><span><?= h($c['titre']) ?></span> <span class="meta"><?= h($c['auteur_nom']) ?></span></a></li>
 <?php endforeach; ?>
 </ul>
 <?php endif; ?>
 
-<p><a href="proposer.php">→ Proposer un texte</a></p>
+<p><a href="proposer.php">&rarr; Proposer un texte</a></p>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>

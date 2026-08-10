@@ -28,12 +28,21 @@ if ($doc === false) {
 
 <?= poesie_nav_html('contributions') ?>
 
-<p><a href="contributions.php">&larr; Contributions</a></p>
+<main class="lecture">
 
+<p class="lecture-retour"><a href="contributions.php">&larr; Contributions</a></p>
+
+<header class="lecture-entete">
+<p class="kicker">Contribution</p>
 <h1><?= h($doc['titre']) ?></h1>
-<p class="meta">par <?= h($doc['auteur_nom']) ?></p>
+<p class="lecture-auteur">par <?= h($doc['auteur_nom']) ?></p>
+</header>
 
-<pre class="contenu"><?= h($doc['contenu']) ?></pre>
+<div class="corps-texte"><?= h($doc['contenu']) ?></div>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>

@@ -55,31 +55,37 @@ $doublons = $doc['doublon_info'] !== null ? json_decode($doc['doublon_info'], tr
 
 <?= poesie_nav_html() ?>
 
-<p><a href="liste.php">&larr; Tous les textes</a></p>
+<main class="lecture">
 
+<p class="lecture-retour"><a href="liste.php">&larr; Tous les textes</a></p>
+
+<header class="lecture-entete">
+<p class="kicker"><?= h($doc['dossier_parent']) ?></p>
 <h1><?= h($doc['titre']) ?></h1>
-
-<div class="badges">
+<?php if ($categories !== [] || $series !== []): ?>
+<div class="pastilles">
 <?php foreach ($categories as $c): ?>
-<a href="categorie.php?slug=<?= h($c['slug']) ?>"><?= h($c['nom']) ?></a>
+<a class="pastille" href="categorie.php?slug=<?= h($c['slug']) ?>"><?= h($c['nom']) ?></a>
 <?php endforeach; ?>
 <?php foreach ($series as $s): ?>
-<a href="series.php">Série : <?= h($s['nom']) ?></a>
+<a class="pastille" href="series.php">Série : <?= h($s['nom']) ?></a>
 <?php endforeach; ?>
 </div>
-
-<?php if ($doublons !== null): ?>
-<p><em>Texte lié (<?= h($doublons['type']) ?>) : <?= h(implode(', ', array_map(
-    static fn(string $i) => $i,
-    $doublons['lié_a']
-))) ?></em></p>
 <?php endif; ?>
+<?php if ($doublons !== null): ?>
+<p class="lien-associe">Texte lié (<?= h($doublons['type']) ?>) : <?= h(implode(', ', $doublons['lié_a'])) ?></p>
+<?php endif; ?>
+</header>
 
 <?php if ($contenu !== null): ?>
-<pre class="contenu"><?= h($contenu) ?></pre>
+<div class="corps-texte"><?= h($contenu) ?></div>
 <?php else: ?>
-<p><em>Contenu non disponible pour ce texte.</em></p>
+<p class="texte-indisponible">Contenu non disponible pour ce texte.</p>
 <?php endif; ?>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>

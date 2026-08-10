@@ -20,17 +20,26 @@ $categories = poesie_categories();
 
 <?= poesie_nav_html('accueil') ?>
 
-<h1>Corpus de textes</h1>
-<p><?= $total ?> textes réunis, classés par entrée thématique. Un même texte peut apparaître dans plusieurs catégories.</p>
+<main class="page">
 
-<h2>Parcourir par catégorie</h2>
-<div class="badges">
+<section class="hero">
+<p class="kicker">Corpus de textes</p>
+<h1>Des mots à découvrir, entre satire, poésie et chanson.</h1>
+<p><?= $total ?> textes réunis, classés par entrée thématique. Un même texte peut apparaître dans plusieurs catégories.</p>
+</section>
+
+<h2>Parcourir par entrée</h2>
+<nav class="rubriques">
 <?php foreach ($categories as $c): ?>
 <a href="<?= $c['slug'] === 'series' ? 'series.php' : 'categorie.php?slug=' . urlencode($c['slug']) ?>"><?= h($c['nom']) ?></a>
 <?php endforeach; ?>
-</div>
+</nav>
 
-<p><a href="liste.php">→ Voir la liste complète des textes</a></p>
+<p><a href="liste.php">&rarr; Voir la liste complète des textes</a></p>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>

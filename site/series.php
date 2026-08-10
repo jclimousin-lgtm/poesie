@@ -27,6 +27,9 @@ $stmtMembres = $pdo->prepare(
 
 <?= poesie_nav_html('series') ?>
 
+<main class="page-large">
+
+<p class="kicker">Univers récurrents</p>
 <h1>Séries</h1>
 
 <?php foreach ($series as $s): ?>
@@ -35,12 +38,16 @@ $stmtMembres = $pdo->prepare(
 $stmtMembres->execute(['serie_id' => $s['id']]);
 $membres = $stmtMembres->fetchAll();
 ?>
-<ul class="textes">
+<ul class="index-list">
 <?php foreach ($membres as $m): ?>
-<li><a href="fiche.php?id=<?= h($m['id_interne']) ?>"><?= h($m['titre']) ?></a></li>
+<li><a class="titre-lien" href="fiche.php?id=<?= h($m['id_interne']) ?>"><span><?= h($m['titre']) ?></span></a></li>
 <?php endforeach; ?>
 </ul>
 <?php endforeach; ?>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>

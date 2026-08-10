@@ -58,34 +58,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proposer un texte — Corpus</title>
-<style><?= POESIE_STYLE ?>
-form.proposition label { display: block; margin-top: 1rem; font-family: system-ui, sans-serif; font-weight: bold; }
-form.proposition input[type=text], form.proposition input[type=email], form.proposition textarea { width: 100%; padding: 0.5rem; font-family: inherit; font-size: 1rem; box-sizing: border-box; }
-form.proposition textarea { min-height: 250px; }
-form.proposition button { margin-top: 1.5rem; padding: 0.6rem 1.5rem; font-size: 1rem; }
-.erreurs { color: #a33; }
-.succes { color: #1a7a1a; }
-</style>
+<style><?= POESIE_STYLE ?></style>
 </head>
 <body>
 
 <?= poesie_nav_html('proposer') ?>
 
-<h1>Proposer un texte</h1>
+<main class="page">
 
+<p class="kicker">Contribuer</p>
+<h1>Proposer un texte</h1>
 <p>Votre texte sera examiné avant toute publication. La validation reste humaine.</p>
 
 <?php if ($succes): ?>
-<p class="succes">Votre proposition a bien été enregistrée. Elle sera examinée avant publication. Merci.</p>
+<p class="msg-succes">Votre proposition a bien été enregistrée. Elle sera examinée avant publication. Merci.</p>
 <?php else: ?>
 
 <?php if ($erreurs !== []): ?>
-<div class="erreurs">
+<div class="msg-erreurs">
 <ul><?php foreach ($erreurs as $e): ?><li><?= h($e) ?></li><?php endforeach; ?></ul>
 </div>
 <?php endif; ?>
 
-<form class="proposition" method="post">
+<form class="formulaire" method="post">
 <label for="auteur_nom">Nom ou pseudonyme</label>
 <input type="text" id="auteur_nom" name="auteur_nom" value="<?= h($auteurNom) ?>" required>
 
@@ -98,12 +93,16 @@ form.proposition button { margin-top: 1.5rem; padding: 0.6rem 1.5rem; font-size:
 <label for="email">Adresse e-mail de contact</label>
 <input type="email" id="email" name="email" value="<?= h($email) ?>" required>
 
-<label><input type="checkbox" name="declaration" value="1"> Je confirme être l'auteur·e de ce texte, ou autorisé·e à le proposer à la publication.</label>
+<label class="case"><input type="checkbox" name="declaration" value="1"> Je confirme être l'auteur·e de ce texte, ou autorisé·e à le proposer à la publication.</label>
 
 <button type="submit">Envoyer</button>
 </form>
 
 <?php endif; ?>
+
+</main>
+
+<?= poesie_pied_html() ?>
 
 </body>
 </html>
