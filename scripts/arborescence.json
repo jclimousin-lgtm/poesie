@@ -1,0 +1,27 @@
+{
+  "categories": [
+    {"slug": "poesie", "nom": "Poésie", "ordre": 1},
+    {"slug": "satire", "nom": "Satire", "ordre": 2},
+    {"slug": "chansons", "nom": "Chansons", "ordre": 3},
+    {"slug": "pastiches-parodies", "nom": "Pastiches & parodies", "ordre": 4},
+    {"slug": "reflexion", "nom": "Réflexion", "ordre": 5},
+    {"slug": "series", "nom": "Séries", "ordre": 6},
+    {"slug": "formes-contraintes", "nom": "Formes & contraintes", "ordre": 7},
+    {"slug": "personnel", "nom": "Personnel", "ordre": 8},
+    {"slug": "a-decouvrir", "nom": "À découvrir", "ordre": 9}
+  ],
+  "document_categories": {
+    "chansons": ["INV-0001","INV-0002","INV-0003","INV-0004","INV-0005","INV-0009","INV-0010","INV-0012","INV-0013","INV-0014","INV-0015","INV-0016","INV-0017","INV-0018","INV-0019","INV-0020","INV-0021","INV-0022","INV-0023","INV-0024","INV-0025"],
+    "satire": ["INV-0006","INV-0008","INV-0011","INV-0026","INV-0028","INV-0029","INV-0030","INV-0031","INV-0032","INV-0033","INV-0035","INV-0038","INV-0039","INV-0043","INV-0044","INV-0065","INV-0066","INV-0067","INV-0068","INV-0069","INV-0070","INV-0071","INV-0072","INV-0073","INV-0074","INV-0075","INV-0076","INV-0077","INV-0078","INV-0079","INV-0080","INV-0081","INV-0082","INV-0083","INV-0084","INV-0085","INV-0086","INV-0087","INV-0088","INV-0089","INV-0090","INV-0091","INV-0092","INV-0093","INV-0094","INV-0095","INV-0096","INV-0097","INV-0098","INV-0099","INV-0100","INV-0101","INV-0102","INV-0103","INV-0104","INV-0124"],
+    "pastiches-parodies": ["INV-0007","INV-0027","INV-0028","INV-0029","INV-0030","INV-0031","INV-0032","INV-0033","INV-0034","INV-0035","INV-0036"],
+    "reflexion": ["INV-0048","INV-0050","INV-0051","INV-0052","INV-0053","INV-0054","INV-0055","INV-0056","INV-0057","INV-0058","INV-0059","INV-0060","INV-0062","INV-0063","INV-0064","INV-0077","INV-0099","INV-0104","INV-0105","INV-0106","INV-0116"],
+    "personnel": ["INV-0040","INV-0041","INV-0042","INV-0045","INV-0046","INV-0047","INV-0049"],
+    "series": ["INV-0046","INV-0047","INV-0049","INV-0108","INV-0109","INV-0110","INV-0111","INV-0112","INV-0113","INV-0114","INV-0115"],
+    "formes-contraintes": ["INV-0041","INV-0105","INV-0106","INV-0107","INV-0116"]
+  },
+  "series": [
+    {"id": "zebres", "nom": "Les zèbres", "membres": ["INV-0108","INV-0109","INV-0110"]},
+    {"id": "fourmis-traceuses", "nom": "Les Fourmis traceuses", "membres": ["INV-0111","INV-0112","INV-0113","INV-0114","INV-0115"]},
+    {"id": "sourimotte", "nom": "Sourimotte", "membres": ["INV-0046","INV-0047","INV-0049"]}
+  ]
+}

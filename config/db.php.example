@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Modèle — copier vers poesie-config-prive/db.php sur le serveur (hors
+ * docroot, jamais dans ce dépôt), avec les vraies valeurs. Ne jamais
+ * committer le fichier réel.
+ */
+
+return [
+    'host' => 'localhost',
+    'name' => 'nare8592_poesie',
+    'user' => 'nare8592_poesie',
+    'pass' => 'CHANGER_MOI',
+];

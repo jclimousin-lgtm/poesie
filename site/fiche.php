@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/_layout.php';
+
+$id = trim((string) ($_GET['id'] ?? ''));
+
+$pdo = poesie_db();
+$stmt = $pdo->prepare('SELECT * FROM documents WHERE id_interne = :id');
+$stmt->execute(['id' => $id]);
+$doc = $stmt->fetch();
+
+if ($doc === false) {
+    http_response_code(404);
+    echo '<p>Texte introuvable.</p><p><a href="liste.php">Retour à la liste</a></p>';
+    exit;
+}
+
+$stmtCat = $pdo->prepare(
+    'SELECT c.slug, c.nom FROM categories c
+     JOIN document_categories dc ON dc.categorie_slug = c.slug
+     WHERE dc.id_interne = :id ORDER BY c.ordre ASC'
+);
+$stmtCat->execute(['id' => $id]);
+$categories = $stmtCat->fetchAll();
+
+$stmtSer = $pdo->prepare(
+    'SELECT s.id, s.nom FROM series s
+     JOIN document_series ds ON ds.serie_id = s.id
+     WHERE ds.id_interne = :id'
+);
+$stmtSer->execute(['id' => $id]);
+$series = $stmtSer->fetchAll();
+
+$contenu = null;
+if ($doc['contenu_fichier_local'] !== null) {
+    $chemin = __DIR__ . '/../../poesie-corpus-prive/' . $doc['contenu_fichier_local'];
+    if (is_file($chemin)) {
+        $contenu = file_get_contents($chemin);
+    }
+}
+
+$doublons = $doc['doublon_info'] !== null ? json_decode($doc['doublon_info'], true) : null;
+?>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?= h($doc['titre']) ?> — Corpus</title>
+<style><?= POESIE_STYLE ?></style>
+</head>
+<body>
+
+<?= poesie_nav_html() ?>
+
+<p><a href="liste.php">&larr; Tous les textes</a></p>
+
+<h1><?= h($doc['titre']) ?></h1>
+
+<div class="badges">
+<?php foreach ($categories as $c): ?>
+<a href="categorie.php?slug=<?= h($c['slug']) ?>"><?= h($c['nom']) ?></a>
+<?php endforeach; ?>
+<?php foreach ($series as $s): ?>
+<a href="series.php">Série : <?= h($s['nom']) ?></a>
+<?php endforeach; ?>
+</div>
+
+<?php if ($doublons !== null): ?>
+<p><em>Texte lié (<?= h($doublons['type']) ?>) : <?= h(implode(', ', array_map(
+    static fn(string $i) => $i,
+    $doublons['lié_a']
+))) ?></em></p>
+<?php endif; ?>
+
+<?php if ($contenu !== null): ?>
+<pre class="contenu"><?= h($contenu) ?></pre>
+<?php else: ?>
+<p><em>Contenu non disponible pour ce texte.</em></p>
+<?php endif; ?>
+
+</body>
+</html>
