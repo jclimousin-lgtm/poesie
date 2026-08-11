@@ -42,7 +42,11 @@ $categories = $pdo->query('SELECT slug, nom FROM categories ORDER BY ordre ASC')
 <p class="msg-succes"><?= h($msg) ?></p>
 <?php endif; ?>
 
+<?php if (!is_admin_role()): ?>
+<p class="note-lecture-seule">Rôle lecteur — consultation uniquement, aucune action de modification disponible ici.</p>
+<?php else: ?>
 <p><a href="texte-form.php"><button class="primaire" type="button">+ Créer un texte</button></a></p>
+<?php endif; ?>
 
 <form method="get">
 <input type="search" name="q" placeholder="Rechercher titre, auteur, ID..." value="<?= h($q) ?>" style="width: 320px;">
@@ -50,22 +54,24 @@ $categories = $pdo->query('SELECT slug, nom FROM categories ORDER BY ordre ASC')
 <?php if ($q !== ''): ?> <a href="textes.php">réinitialiser</a><?php endif; ?>
 </form>
 
+<?php $admin = is_admin_role(); ?>
 <form method="post" action="texte-action.php" id="form-lot">
 <table>
 <thead><tr>
-<th><input type="checkbox" onclick="document.querySelectorAll('.case-texte').forEach(c => c.checked = this.checked)"></th>
-<th>ID</th><th>Titre</th><th>Auteur</th><th>Origine</th><th>Statut</th><th>Catégories</th><th>Actions</th>
+<?php if ($admin): ?><th><input type="checkbox" onclick="document.querySelectorAll('.case-texte').forEach(c => c.checked = this.checked)"></th><?php endif; ?>
+<th>ID</th><th>Titre</th><th>Auteur</th><th>Origine</th><th>Statut</th><th>Catégories</th><?php if ($admin): ?><th>Actions</th><?php endif; ?>
 </tr></thead>
 <tbody>
 <?php foreach ($documents as $d): ?>
 <tr>
-<td><input class="case-texte" type="checkbox" name="ids[]" value="<?= h($d['id_interne']) ?>" form="form-lot"></td>
+<?php if ($admin): ?><td><input class="case-texte" type="checkbox" name="ids[]" value="<?= h($d['id_interne']) ?>" form="form-lot"></td><?php endif; ?>
 <td><?= h($d['id_interne']) ?></td>
 <td><?= h($d['titre']) ?></td>
 <td><?= h((string) $d['auteur']) ?></td>
 <td><span class="badge<?= $d['origine'] === 'corpus_fondateur' ? ' badge-fondateur' : '' ?>"><?= h($d['origine']) ?></span></td>
 <td><?= h($d['statut_publication']) ?></td>
 <td><?= h((string) $d['categories_txt']) ?></td>
+<?php if ($admin): ?>
 <td>
 <a href="texte-form.php?id=<?= h($d['id_interne']) ?>">Modifier</a>
 &middot;
@@ -78,11 +84,13 @@ $libelleStatut = $d['statut_publication'] === 'publie' ? 'Dépublier' : 'Publier
 &middot; <a href="texte-supprimer.php?id=<?= h($d['id_interne']) ?>">Supprimer</a>
 <?php endif; ?>
 </td>
+<?php endif; ?>
 </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
 
+<?php if ($admin): ?>
 <h2>Action en lot (sur les lignes cochées)</h2>
 <p>
 <select name="action">
@@ -100,6 +108,7 @@ $libelleStatut = $d['statut_publication'] === 'publie' ? 'Dépublier' : 'Publier
 </select>
 <button class="primaire" type="submit" onclick="return confirm('Confirmer cette action sur les textes sélectionnés ?')">Appliquer</button>
 </p>
+<?php endif; ?>
 </form>
 
 <p><?= count($documents) ?> texte(s).</p>

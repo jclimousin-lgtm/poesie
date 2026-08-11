@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_admin.php';
+require_role_admin();
+require_once __DIR__ . '/../_seo.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: textes.php');
@@ -68,6 +70,10 @@ if ($ids !== []) {
             }
             break;
     }
+}
+
+if ($rapport !== []) {
+    poesie_regenerer_sitemap();
 }
 
 $message = implode(' — ', $rapport) !== '' ? implode(' — ', $rapport) : 'Aucune action effectuee.';

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_admin.php';
+require_role_admin();
+require_once __DIR__ . '/../_seo.php';
 
 $pdo = poesie_db();
 $id = trim((string) ($_GET['id'] ?? ($_POST['id_interne'] ?? '')));
@@ -106,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare('REPLACE INTO document_series (id_interne, serie_id, position) VALUES (:id, :serie, 1)')->execute(['id' => $id, 'serie' => $serieChoisie]);
         }
 
+        poesie_regenerer_sitemap();
         header('Location: textes.php?msg=' . urlencode(($modeEdition ? 'Texte modifie' : 'Texte cree') . ' : ' . $titre));
         exit;
     }

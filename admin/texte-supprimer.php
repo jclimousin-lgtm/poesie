@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_admin.php';
+require_role_admin();
+require_once __DIR__ . '/../_seo.php';
 
 $pdo = poesie_db();
 $id = trim((string) ($_GET['id'] ?? ($_POST['id'] ?? '')));
@@ -36,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['confirmer'] ?? '') === '1'
     $pdo->prepare('DELETE FROM document_categories WHERE id_interne = :id')->execute(['id' => $id]);
     $pdo->prepare('DELETE FROM document_series WHERE id_interne = :id')->execute(['id' => $id]);
     $pdo->prepare('DELETE FROM documents WHERE id_interne = :id')->execute(['id' => $id]);
+    poesie_regenerer_sitemap();
     header('Location: textes.php?msg=' . urlencode('Texte supprimé : ' . $doc['titre']));
     exit;
 }

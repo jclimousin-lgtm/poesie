@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_admin.php';
+require_role_admin();
+require_once __DIR__ . '/../_seo.php';
 
 // Les 9 catégories de l'arborescence éditoriale validée ne sont jamais
 // supprimables depuis cette administration — protection permanente, comme
@@ -52,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['confirmer'] ?? '') === '1'
     // eux-mêmes ne sont jamais supprimés.
     $pdo->prepare('DELETE FROM document_categories WHERE categorie_slug = :slug')->execute(['slug' => $slug]);
     $pdo->prepare('DELETE FROM categories WHERE slug = :slug')->execute(['slug' => $slug]);
+    poesie_regenerer_sitemap();
     header('Location: categories.php?msg=' . urlencode('Catégorie supprimée : ' . $categorie['nom'] . ' (' . count($textesAffectes) . ' texte(s) jamais touché(s), seulement désaffecté(s))'));
     exit;
 }

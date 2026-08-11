@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_admin.php';
+require_once __DIR__ . '/../_seo.php';
 
 $pdo = poesie_db();
 
 $erreurs = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creer') {
+    require_role_admin();
     $slug = trim((string) ($_POST['slug'] ?? ''));
     $nom = trim((string) ($_POST['nom'] ?? ''));
     $ordre = (int) ($_POST['ordre'] ?? 0);
@@ -26,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creer
         } else {
             $pdo->prepare('INSERT INTO categories (slug, nom, ordre) VALUES (:slug, :nom, :ordre)')
                 ->execute(['slug' => $slug, 'nom' => $nom, 'ordre' => $ordre]);
+            poesie_regenerer_sitemap();
             header('Location: categories.php?msg=' . urlencode('Catégorie créée : ' . $nom));
             exit;
         }
@@ -60,8 +63,12 @@ $categories = $pdo->query(
 <div class="msg-erreurs"><ul><?php foreach ($erreurs as $e): ?><li><?= h($e) ?></li><?php endforeach; ?></ul></div>
 <?php endif; ?>
 
+<?php if (!is_admin_role()): ?>
+<p class="note-lecture-seule">Rôle lecteur — consultation uniquement, aucune action de modification disponible ici.</p>
+<?php endif; ?>
+
 <table>
-<thead><tr><th>Ordre</th><th>Nom</th><th>Slug</th><th>Textes</th><th>Actions</th></tr></thead>
+<thead><tr><th>Ordre</th><th>Nom</th><th>Slug</th><th>Textes</th><?php if (is_admin_role()): ?><th>Actions</th><?php endif; ?></tr></thead>
 <tbody>
 <?php foreach ($categories as $c): ?>
 <tr>
@@ -69,16 +76,19 @@ $categories = $pdo->query(
 <td><?= h($c['nom']) ?></td>
 <td><?= h($c['slug']) ?></td>
 <td><a href="categorie-form.php?slug=<?= h($c['slug']) ?>&voir=1"><?= (int) $c['nb_textes'] ?> texte(s)</a></td>
+<?php if (is_admin_role()): ?>
 <td>
 <a href="categorie-form.php?slug=<?= h($c['slug']) ?>">Modifier</a>
 &middot;
 <a href="categorie-supprimer.php?slug=<?= h($c['slug']) ?>">Supprimer</a>
 </td>
+<?php endif; ?>
 </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
 
+<?php if (is_admin_role()): ?>
 <h2>Créer une catégorie</h2>
 <form class="editeur" method="post">
 <input type="hidden" name="action" value="creer">
@@ -90,6 +100,7 @@ $categories = $pdo->query(
 <input type="text" id="ordre" name="ordre" value="99">
 <p><button class="primaire" type="submit">Créer</button></p>
 </form>
+<?php endif; ?>
 
 </body>
 </html>

@@ -3,10 +3,18 @@
 declare(strict_types=1);
 
 require __DIR__ . '/_admin.php';
+require_once __DIR__ . '/../_seo.php';
 
 $pdo = poesie_db();
 $slug = trim((string) ($_GET['slug'] ?? ($_POST['slug'] ?? '')));
 $voir = isset($_GET['voir']);
+
+// Le mode "voir" (liste des textes d'une catégorie) est en lecture seule et
+// reste accessible au rôle lecteur ; l'édition (formulaire ou tout POST)
+// reste réservée aux admins.
+if (!$voir || $_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_role_admin();
+}
 
 $stmt = $pdo->prepare('SELECT * FROM categories WHERE slug = :slug');
 $stmt->execute(['slug' => $slug]);
@@ -27,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$voir) {
     } else {
         $pdo->prepare('UPDATE categories SET nom = :nom, ordre = :ordre WHERE slug = :slug')
             ->execute(['nom' => $nom, 'ordre' => $ordre, 'slug' => $slug]);
+        poesie_regenerer_sitemap();
         header('Location: categories.php?msg=' . urlencode('Catégorie modifiée : ' . $nom));
         exit;
     }
