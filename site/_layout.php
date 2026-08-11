@@ -6,6 +6,57 @@ require __DIR__ . '/../_db.php';
 
 function h(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 
+const POESIE_DOMAINE = 'https://poesie.serviceproi.fr';
+
+/** Construit l'URL canonique absolue d'une page du site public. */
+function poesie_url(string $cheminRelatif): string
+{
+    return POESIE_DOMAINE . '/site/' . ltrim($cheminRelatif, '/');
+}
+
+/**
+ * Extrait un résumé court et propre à partir du contenu réel d'un texte
+ * (jamais inventé) — pour meta description / Open Graph / JSON-LD. Retire
+ * les titres markdown éventuels (# ...), aplati les retours à la ligne.
+ */
+function poesie_extrait(string $texte, int $longueur = 155): string
+{
+    $texte = preg_replace('/^#+\s*.*$/m', '', $texte) ?? $texte;
+    $texte = trim(preg_replace('/\s+/', ' ', $texte) ?? $texte);
+    if (mb_strlen($texte) <= $longueur) {
+        return $texte;
+    }
+    $coupe = mb_substr($texte, 0, $longueur);
+    $dernierEspace = mb_strrpos($coupe, ' ');
+    if ($dernierEspace !== false) {
+        $coupe = mb_substr($coupe, 0, $dernierEspace);
+    }
+    return rtrim($coupe) . '…';
+}
+
+/**
+ * Bloc de balises meta communes (description, canonical, Open Graph,
+ * Twitter Card) — centralisé pour rester cohérent sur toutes les pages
+ * publiques. Aucune image (aucune n'est disponible dans le corpus actuel).
+ *
+ * @param 'website'|'article' $type
+ */
+function poesie_meta_html(string $titre, string $description, string $cheminRelatif, string $type = 'website'): string
+{
+    $url = poesie_url($cheminRelatif);
+    return '
+<meta name="description" content="' . h($description) . '">
+<link rel="canonical" href="' . h($url) . '">
+<meta property="og:type" content="' . h($type) . '">
+<meta property="og:site_name" content="Corpus">
+<meta property="og:title" content="' . h($titre) . '">
+<meta property="og:description" content="' . h($description) . '">
+<meta property="og:url" content="' . h($url) . '">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="' . h($titre) . '">
+<meta name="twitter:description" content="' . h($description) . '">';
+}
+
 /** @return list<array{slug:string,nom:string,ordre:int}> */
 function poesie_categories(): array
 {
@@ -26,8 +77,10 @@ function poesie_nav_html(string $slugActif = ''): string
 
     return '
 <header class="site-entete">
-  <a class="marque" href="accueil.php">CORPUS</a>
-  <div class="nav-defilement"><nav class="nav-liens">' . $liens . '</nav></div>
+  <div class="site-entete-large">
+    <a class="marque" href="accueil.php">CORPUS</a>
+    <nav class="nav-liens">' . $liens . '</nav>
+  </div>
 </header>';
 }
 
@@ -38,6 +91,8 @@ function poesie_pied_html(): string
   <a href="accueil.php">&uarr; Retour à l\'accueil</a>
   <span class="site-pied-sep">·</span>
   <span>Un corpus de textes en cours de publication</span>
+  <span class="site-pied-sep">·</span>
+  <a href="../admin/login.php">Administration</a>
 </footer>';
 }
 
@@ -81,17 +136,32 @@ a { color: var(--encre); }
 a:hover { color: var(--accent); }
 h1, h2, h3 { font-family: var(--sans); font-weight: 800; letter-spacing: -0.01em; color: var(--encre); margin: 0; }
 
-/* --- En-tête / navigation --- */
+/* --- En-tete / navigation ---
+   Lentete occupait toute la largeur de lecran, avec la nav des rubriques
+   compressee sur une seule ligne defilante et sa barre de defilement
+   volontairement masquee (-ms-overflow-style/scrollbar-width/::-webkit-
+   scrollbar) -- aucune rubrique netait jamais coupee, mais rien
+   nindiquait quil fallait defiler pour les atteindre, ce qui les rendait
+   de fait indecouvrables au clic/tactile. Remplace par un habillage large
+   (960px, comme .site-pied) qui passe a la ligne (flex-wrap) plutot que de
+   defiler : toutes les rubriques restent visibles et cliquables directement,
+   sur toutes les tailles decran. Signale par lutilisateur 2026-08-12. */
 .site-entete {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-  padding: 1.1rem 1.25rem;
+  padding: 0 1.25rem;
   border-bottom: 3px solid var(--encre);
   background: var(--fond);
   position: sticky;
   top: 0;
   z-index: 10;
+}
+.site-entete-large {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.75rem;
+  padding: 1.1rem 0;
 }
 .marque {
   font-family: var(--sans);
@@ -103,9 +173,7 @@ h1, h2, h3 { font-family: var(--sans); font-weight: 800; letter-spacing: -0.01em
   white-space: nowrap;
 }
 .marque:hover { color: var(--accent); }
-.nav-defilement { overflow-x: auto; flex: 1; -ms-overflow-style: none; scrollbar-width: none; }
-.nav-defilement::-webkit-scrollbar { display: none; }
-.nav-liens { display: flex; gap: 1.3rem; white-space: nowrap; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+.nav-liens { display: flex; flex-wrap: wrap; gap: 0.5rem 1.3rem; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
 .nav-liens a { color: var(--encre-douce); text-decoration: none; padding: 0.3rem 0; border-bottom: 3px solid transparent; }
 .nav-liens a.actif { color: var(--encre); border-bottom-color: var(--accent); }
 .nav-liens a.nav-cta { color: var(--fond); background: var(--accent); padding: 0.35rem 0.8rem; border-radius: 2px; border-bottom: 3px solid transparent; }
@@ -178,7 +246,8 @@ h1, h2, h3 { font-family: var(--sans); font-weight: 800; letter-spacing: -0.01em
 @media (max-width: 640px) {
   .lecture-entete h1 { font-size: 1.7rem; }
   .corps-texte { font-size: 1.08rem; }
-  .site-entete { gap: 1rem; padding: 0.9rem 1rem; }
+  .site-entete { padding: 0 1rem; }
+  .site-entete-large { gap: 0.5rem 1rem; padding: 0.9rem 0; }
   .rubriques a { font-size: 1.1rem; }
 }
 ';
