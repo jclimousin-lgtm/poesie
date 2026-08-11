@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "Administration du corpus"
-AuthUserFile /home/nare8592/poesie-config-prive/.htpasswd
-Require valid-user

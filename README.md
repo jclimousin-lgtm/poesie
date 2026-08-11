@@ -8,7 +8,7 @@ Site de diffusion d'un corpus de textes (poésie, chansons, satire) hébergé su
 - **CATALOGUE** — base MySQL `nare8592_poesie`, table `documents` + `categories`/`series` (métadonnées et référencement).
 - **CORPUS DE TRAVAIL** — `corpus/textes/INV-XXXX.txt` (116 fichiers) + `corpus/catalogue.json`, déployés sur le serveur hors docroot (`poesie-corpus-prive/`), jamais publics directement.
 - **APPLICATION** :
-  - `admin/` — administration éditoriale, protégée par HTTP Basic Auth (`.htaccess`, identifiants dans `~/.config/o2switch/poesie-admin.env`) : CRUD textes/catégories, soumissions.
+  - `admin/` — administration éditoriale : CRUD textes/catégories, soumissions. Protégée par des comptes nominatifs en base (table `users`, rôle `admin` = contrôle total, `lecteur` = consultation seule bloquée côté serveur sur toute mutation) — voir `admin/login.php`/`admin/utilisateurs.php`. Remplace depuis le 2026-08-11 l'ancienne authentification HTTP Basic partagée (`.htaccess`/`.htpasswd`, identifiants dans `~/.config/o2switch/poesie-admin.env` — devenue obsolète, `.htaccess` supprimé du serveur).
   - `site/` — site public de diffusion : `accueil.php`, `liste.php`, `categorie.php`, `series.php`, `fiche.php`, `contributions.php`, `contribution.php`, `proposer.php`, `_layout.php`.
   - `app/_db.php` — helper de connexion partagé par `admin/` et `site/`.
 - `scripts/` — scripts ponctuels de mise en place du schéma (déjà exécutés en production, conservés comme référence).
@@ -27,3 +27,5 @@ Transfert manuel via FTP (lftp) vers o2switch, identifiants dans `~/.config/o2sw
 ## État
 
 Design V2 + administration éditoriale complète, vérifiés en production (voir rapports dans `~/Documents/poesie-mission-*.md`).
+
+**2026-08-11 : comptes avec rôles pour l'admin.** Table `users` (`admin` = contrôle total, `lecteur` = lecture seule) créée en prod via `scripts/setup-utilisateurs.php` (script temporaire, exécuté une fois puis supprimé du serveur — conservé ici en référence comme les autres scripts de `scripts/`). Premier compte : `admin` / `ClefAdmin`, mot de passe modifiable depuis l'interface (`admin/mon-compte.php`). Ancienne authentification HTTP Basic (`.htaccess`) supprimée du serveur après vérification complète du nouveau système (login, blocage serveur du rôle lecteur sur chaque action, anti-verrouillage du dernier compte admin) — testé en local (MariaDB + serveur PHP intégré) puis re-vérifié en production.
