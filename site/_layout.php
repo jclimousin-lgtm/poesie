@@ -317,8 +317,43 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01e
 .pastille { display: inline-block; background: none; border: 1px solid var(--ligne); color: var(--encre-douce); border-radius: 0; padding: 0.25rem 0.7rem; font-size: 0.75rem; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.02em; }
 .pastille:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 .lien-associe { font-size: 0.85rem; color: var(--encre-douce); margin-top: 0.75rem; }
-.corps-texte { white-space: pre-wrap; font-family: var(--serif); font-size: 1.2rem; line-height: 1.8; color: var(--encre); margin-top: 2rem; }
+.corps-texte { white-space: pre-wrap; font-family: var(--serif); font-size: 1.2rem; line-height: 1.5; color: var(--encre); margin-top: 2rem; }
 .texte-indisponible { color: var(--encre-douce); font-style: italic; }
+
+/* --- Liseuse (textes longs) : pagination horizontale façon liseuse --- */
+.liseuse { margin-top: 2rem; }
+.liseuse-viewport {
+  position: relative;
+  height: min(70vh, 600px);
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border-top: 1px solid var(--ligne);
+  border-bottom: 1px solid var(--ligne);
+}
+.liseuse-viewport::-webkit-scrollbar { display: none; }
+.liseuse-contenu {
+  column-gap: 0;
+  column-fill: auto;
+  height: 100%;
+  padding: 1.5rem 0 1rem;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+.liseuse-zone-gauche, .liseuse-zone-droite { position: absolute; top: 0; bottom: 0; width: 14%; cursor: pointer; }
+.liseuse-zone-gauche { left: 0; }
+.liseuse-zone-droite { right: 0; }
+.liseuse-controles { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; }
+.liseuse-btn { border: 1px solid var(--encre-forte); border-radius: 0; background: var(--fond); color: var(--encre-forte); font-size: 1.2rem; line-height: 1; padding: 0.6rem 1.1rem; cursor: pointer; font-family: var(--sans); }
+.liseuse-btn:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); color: var(--accent-encre); }
+.liseuse-btn:disabled { opacity: 0.3; cursor: default; }
+.liseuse-position { font-size: 0.85rem; color: var(--encre-douce); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .liseuse-viewport { height: min(76vh, 560px); }
+  .liseuse-contenu { font-size: 1.05rem; padding: 1.1rem 0 0.75rem; }
+}
 
 /* --- Formulaires --- */
 .formulaire label { display: block; margin-top: 1.4rem; font-family: var(--serif); font-size: 0.98rem; font-weight: 400; text-transform: none; letter-spacing: normal; color: var(--encre); }

@@ -59,6 +59,12 @@ if ($doc['contenu_inline'] !== null) {
 
 $doublons = $doc['doublon_info'] !== null ? json_decode($doc['doublon_info'], true) : null;
 
+// Au-delà de ce seuil (romans, longues nouvelles), l'affichage continu devient
+// difficile à lire, surtout sur mobile : on passe en mode liseuse paginée.
+// Les ~116 poèmes/chansons du corpus fondateur restent tous sous ce seuil et
+// gardent l'affichage classique, inchangé.
+$estLong = $contenu !== null && mb_strlen($contenu) > 4000;
+
 $cheminPage = 'fiche.php?id=' . $doc['id_interne'];
 $extrait = $contenu !== null ? poesie_extrait($contenu) : $doc['titre'];
 
@@ -124,10 +130,82 @@ if ($series !== []) {
 <?php endif; ?>
 </header>
 
-<?php if ($contenu !== null): ?>
-<div class="corps-texte"><?= h($contenu) ?></div>
-<?php else: ?>
+<?php if ($contenu === null): ?>
 <p class="texte-indisponible">Contenu non disponible pour ce texte.</p>
+<?php elseif ($estLong): ?>
+<div class="liseuse" data-liseuse>
+  <div class="liseuse-viewport">
+    <div class="liseuse-zone-gauche" aria-hidden="true"></div>
+    <div class="liseuse-zone-droite" aria-hidden="true"></div>
+    <div class="liseuse-contenu corps-texte"><?= h($contenu) ?></div>
+  </div>
+  <div class="liseuse-controles">
+    <button type="button" class="liseuse-btn liseuse-prec" aria-label="Page précédente">&larr;</button>
+    <span class="liseuse-position"><span class="liseuse-page-actuelle">1</span> / <span class="liseuse-page-totale">…</span></span>
+    <button type="button" class="liseuse-btn liseuse-suiv" aria-label="Page suivante">&rarr;</button>
+  </div>
+</div>
+<script>
+(function () {
+  var racine = document.querySelector('[data-liseuse]');
+  if (!racine) { return; }
+  var vue = racine.querySelector('.liseuse-viewport');
+  var contenu = racine.querySelector('.liseuse-contenu');
+  var btnPrec = racine.querySelector('.liseuse-prec');
+  var btnSuiv = racine.querySelector('.liseuse-suiv');
+  var elActuelle = racine.querySelector('.liseuse-page-actuelle');
+  var elTotale = racine.querySelector('.liseuse-page-totale');
+  var largeurPage = 0;
+  var totalPages = 1;
+
+  function pageCourante() {
+    return largeurPage ? Math.round(vue.scrollLeft / largeurPage) : 0;
+  }
+
+  function metAJourEtat(n) {
+    elActuelle.textContent = String(n + 1);
+    btnPrec.disabled = n <= 0;
+    btnSuiv.disabled = n >= totalPages - 1;
+  }
+
+  function allerPage(n, animer) {
+    n = Math.max(0, Math.min(totalPages - 1, n));
+    vue.scrollTo({ left: n * largeurPage, behavior: animer === false ? 'auto' : 'smooth' });
+    metAJourEtat(n);
+  }
+
+  function mesurer() {
+    var n = pageCourante();
+    largeurPage = vue.clientWidth;
+    contenu.style.columnWidth = largeurPage + 'px';
+    totalPages = Math.max(1, Math.round(contenu.scrollWidth / largeurPage));
+    elTotale.textContent = String(totalPages);
+    allerPage(n, false);
+  }
+
+  btnPrec.addEventListener('click', function () { allerPage(pageCourante() - 1); });
+  btnSuiv.addEventListener('click', function () { allerPage(pageCourante() + 1); });
+  racine.querySelector('.liseuse-zone-gauche').addEventListener('click', function () { allerPage(pageCourante() - 1); });
+  racine.querySelector('.liseuse-zone-droite').addEventListener('click', function () { allerPage(pageCourante() + 1); });
+
+  racine.setAttribute('tabindex', '0');
+  racine.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { allerPage(pageCourante() + 1); }
+    if (e.key === 'ArrowLeft') { allerPage(pageCourante() - 1); }
+  });
+
+  var minuteur;
+  vue.addEventListener('scroll', function () {
+    clearTimeout(minuteur);
+    minuteur = setTimeout(function () { metAJourEtat(pageCourante()); }, 80);
+  });
+
+  window.addEventListener('resize', mesurer);
+  mesurer();
+})();
+</script>
+<?php else: ?>
+<div class="corps-texte"><?= h($contenu) ?></div>
 <?php endif; ?>
 
 </article>
