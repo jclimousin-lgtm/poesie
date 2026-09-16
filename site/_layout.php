@@ -253,11 +253,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01e
    sur toutes les tailles decran. Signale par lutilisateur 2026-08-12. */
 .site-entete {
   padding: 0 1.25rem;
-  border-bottom: 3px solid var(--encre);
+  border-bottom: 2px solid var(--encre);
   background: var(--fond);
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 .site-entete-large {
   max-width: 960px;
@@ -265,15 +262,15 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01e
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.6rem 1.75rem;
-  padding: 1.1rem 0;
+  gap: 0.25rem 1.4rem;
+  padding: 0.55rem 0;
 }
 .marque { display: block; text-decoration: none; white-space: nowrap; }
-.marque-logo { display: block; height: 34px; width: auto; }
-.nav-liens { display: flex; flex-wrap: wrap; gap: 0.5rem 1.3rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-.nav-liens a { color: var(--encre-douce); text-decoration: none; padding: 0.3rem 0; border-bottom: 3px solid transparent; }
+.marque-logo { display: block; height: 24px; width: auto; }
+.nav-liens { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.nav-liens a { color: var(--encre-douce); text-decoration: none; padding: 0.15rem 0; border-bottom: 2px solid transparent; }
 .nav-liens a.actif { color: var(--accent); border-bottom-color: var(--accent); }
-.nav-liens a.nav-cta { color: var(--accent-encre); background: var(--accent); padding: 0.35rem 0.8rem; border-radius: 0; border-bottom: 3px solid transparent; }
+.nav-liens a.nav-cta { color: var(--accent-encre); background: var(--accent); padding: 0.2rem 0.6rem; border-radius: 0; border-bottom: 2px solid transparent; }
 .nav-liens a.nav-cta:hover { color: var(--accent-encre); background: var(--accent-hover); opacity: 1; }
 
 /* --- Conteneurs génériques --- */
@@ -394,7 +391,9 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01e
   .lecture-entete h1 { font-size: 1.7rem; }
   .corps-texte { font-size: 1.08rem; }
   .site-entete { padding: 0 1rem; }
-  .site-entete-large { gap: 0.5rem 1rem; padding: 0.9rem 0; }
+  .site-entete-large { gap: 0.2rem 0.85rem; padding: 0.5rem 0; }
+  .marque-logo { height: 20px; }
+  .nav-liens { font-size: 0.65rem; gap: 0.2rem 0.7rem; }
   .rubriques a { font-size: 1.1rem; }
 }
 ';
