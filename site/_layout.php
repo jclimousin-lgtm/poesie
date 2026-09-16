@@ -85,6 +85,56 @@ function poesie_nav_html(string $slugActif = ''): string
 }
 
 /**
+ * Composant CORPUS DA v1.3 — pile de livres illustrée, navigation vers
+ * 5 rubriques mappées 1:1 (poesie/satire/chansons/pastiches-parodies/
+ * reflexion) + 2 emplacements (« Expérimentation », « Et autres
+ * curiosités ») pointant tous deux vers « à découvrir » sur décision
+ * explicite de l'utilisateur 2026-09-16 (l'illustration ne compte que 7
+ * livres pour 9 rubriques réelles ; Séries/Formes & contraintes/Personnel
+ * restent accessibles uniquement via la nav classique poesie_nav_html()).
+ * $slugActif attend un slug réel de la table `categories`.
+ */
+function poesie_livres_nav_html(string $slugActif = ''): string
+{
+    $livres = [
+        ['id' => 'poesie', 'slug' => 'poesie', 'label' => 'Poésie', 'coords' => [18, 36, 184, 48]],
+        ['id' => 'satire', 'slug' => 'satire', 'label' => 'Satire', 'coords' => [17, 87, 185, 48]],
+        ['id' => 'chansons', 'slug' => 'chansons', 'label' => 'Chansons', 'coords' => [18, 138, 183, 48]],
+        ['id' => 'pastiches', 'slug' => 'pastiches-parodies', 'label' => 'Pastiches et parodies', 'coords' => [19, 188, 181, 49]],
+        ['id' => 'reflexion', 'slug' => 'reflexion', 'label' => 'Réflexion', 'coords' => [20, 240, 180, 49]],
+        ['id' => 'experimentation', 'slug' => 'a-decouvrir', 'label' => 'Expérimentation — à découvrir', 'coords' => [21, 292, 179, 50]],
+        ['id' => 'autres', 'slug' => 'a-decouvrir', 'label' => 'Et autres curiosités — à découvrir', 'coords' => [23, 344, 177, 57]],
+    ];
+
+    $zones = '';
+    foreach ($livres as $l) {
+        [$x, $y, $w, $hgt] = $l['coords'];
+        $actif = $slugActif !== '' && $slugActif === $l['slug'];
+        $href = h('categorie.php?slug=' . urlencode($l['slug']));
+        $classeRect = 'hit' . ($actif ? ' hit-actif' : '');
+        $zones .= '<a href="' . $href . '" data-corpus-category="' . h($l['id']) . '" aria-label="' . h($l['label']) . '"' . ($actif ? ' aria-current="page"' : '') . '>'
+            . '<rect class="' . $classeRect . '" x="' . $x . '" y="' . $y . '" width="' . $w . '" height="' . $hgt . '" rx="4"/>'
+            . '</a>';
+    }
+
+    return '
+<aside class="livres-nav" aria-label="Rubriques du Corpus, par illustration">
+  <p class="livres-nav-titre">Parcourir le Corpus</p>
+  <svg class="livres-nav-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 225 415" role="navigation" aria-label="Rubriques du Corpus">
+    <title>Rubriques du Corpus</title>
+    <image href="assets/corpus/books-exact.png" x="0" y="0" width="225" height="415" preserveAspectRatio="none"/>
+    <style>
+      a .hit{fill:transparent;stroke:transparent;stroke-width:2}
+      a:hover .hit,a:focus-visible .hit{fill:#8C3028;fill-opacity:.12;stroke:#8C3028;stroke-opacity:.75}
+      a:focus{outline:none}
+      .hit-actif{fill:#8C3028;fill-opacity:.16;stroke:#8C3028;stroke-opacity:.9}
+    </style>
+    ' . $zones . '
+  </svg>
+</aside>';
+}
+
+/**
  * Verrou par mot de passe partagé pour la rubrique « Personnel » —
  * indépendant du système de comptes admin/lecteur (admin/_lib.php), qui
  * ne gère que l'accès à l'espace d'administration, pas la lecture
@@ -290,6 +340,20 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01e
 .site-pied { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 3rem; font-size: 0.8rem; color: var(--encre-legere); border-top: 1px solid var(--encre-forte); }
 .site-pied a { color: var(--encre-douce); font-weight: 700; }
 .site-pied-sep { margin: 0 0.5rem; }
+
+/* --- Composant DA v1.3 : navigation par pile de livres --- */
+.livres-nav { width: 225px; max-width: 100%; }
+.livres-nav-titre { margin: 0 0 0.75rem; color: var(--encre-douce); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.livres-nav-svg { display: block; width: 100%; height: auto; }
+.livres-nav-svg a { outline: none; }
+
+/* --- Mise en page accueil avec pile de livres en colonne latérale --- */
+.accueil-layout { display: grid; grid-template-columns: 1fr 225px; gap: 2.5rem; align-items: start; }
+
+@media (max-width: 700px) {
+  .accueil-layout { grid-template-columns: 1fr; }
+  .livres-nav { width: 170px; margin: 0 auto; }
+}
 
 @media (max-width: 640px) {
   .lecture-entete h1 { font-size: 1.7rem; }

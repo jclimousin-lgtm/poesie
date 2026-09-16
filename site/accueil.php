@@ -7,6 +7,16 @@ require __DIR__ . '/_layout.php';
 $pdo = poesie_db();
 $total = (int) $pdo->query("SELECT COUNT(*) FROM documents WHERE statut_publication = 'publie'")->fetchColumn();
 $categories = poesie_categories();
+
+$description = 'Un corpus de ' . $total . ' textes — poésie, chansons, satire — classés par entrée thématique.';
+$jsonLd = [
+    '@context' => 'https://schema.org',
+    '@type' => 'WebSite',
+    'name' => 'Corpus',
+    'url' => poesie_url('accueil.php'),
+    'inLanguage' => 'fr',
+    'description' => $description,
+];
 ?>
 <!doctype html>
 <html lang="fr">
@@ -14,13 +24,18 @@ $categories = poesie_categories();
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Corpus — Accueil</title>
+<?= poesie_meta_html('Corpus', $description, 'accueil.php') ?>
+<script type="application/ld+json"><?= json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
 <style><?= POESIE_STYLE ?></style>
 </head>
 <body>
 
 <?= poesie_nav_html('accueil') ?>
 
-<main class="page">
+<main class="page-large">
+
+<div class="accueil-layout">
+<div>
 
 <section class="hero">
 <p class="kicker">Corpus de textes</p>
@@ -36,6 +51,12 @@ $categories = poesie_categories();
 </nav>
 
 <p><a href="liste.php">&rarr; Voir la liste complète des textes</a></p>
+
+</div>
+
+<?= poesie_livres_nav_html() ?>
+
+</div>
 
 </main>
 
