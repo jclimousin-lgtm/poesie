@@ -84,6 +84,66 @@ function poesie_nav_html(string $slugActif = ''): string
 </header>';
 }
 
+/**
+ * Verrou par mot de passe partagé pour la rubrique « Personnel » —
+ * indépendant du système de comptes admin/lecteur (admin/_lib.php), qui
+ * ne gère que l'accès à l'espace d'administration, pas la lecture
+ * publique. Hash stocké (pas le mot de passe en clair) : demandé
+ * 2026-09-16.
+ */
+const POESIE_PERSONNEL_MDP_HASH = '$2y$10$nfACaorKSUQCeoDFQRy6LOTdV/RCaBV3E7KwerUx7/u9lRoDY9X0q';
+
+function poesie_personnel_session(): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+}
+
+function poesie_personnel_authentifie(): bool
+{
+    poesie_personnel_session();
+    return ($_SESSION['personnel_ok'] ?? false) === true;
+}
+
+/**
+ * À appeler avant tout envoi HTML sur une page qui affiche le formulaire.
+ * Valide une éventuelle soumission POST (PRG, pour éviter un repost du
+ * mot de passe au rechargement) : succès → $retourSucces (peut être la
+ * fiche d'origine si on vient d'une redirection depuis fiche.php), échec
+ * → $retourEchec (toujours la page du formulaire elle-même, pour ne pas
+ * faire rebondir inutilement par fiche.php).
+ */
+function poesie_personnel_traiter_soumission(string $retourSucces, string $retourEchec): void
+{
+    poesie_personnel_session();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['personnel_mdp'])) {
+        if (password_verify((string) $_POST['personnel_mdp'], POESIE_PERSONNEL_MDP_HASH)) {
+            $_SESSION['personnel_ok'] = true;
+            header('Location: ' . $retourSucces);
+            exit;
+        }
+        $_SESSION['personnel_erreur'] = true;
+        header('Location: ' . $retourEchec);
+        exit;
+    }
+}
+
+function poesie_personnel_formulaire_html(): string
+{
+    poesie_personnel_session();
+    $erreur = !empty($_SESSION['personnel_erreur']);
+    unset($_SESSION['personnel_erreur']);
+    return '
+<p class="texte-indisponible">Cette rubrique est protégée par un mot de passe.</p>
+<form class="formulaire" method="post">
+<label for="personnel_mdp">Mot de passe</label>
+<input type="password" name="personnel_mdp" id="personnel_mdp" required autofocus>
+' . ($erreur ? '<p class="msg-erreurs">Mot de passe incorrect.</p>' : '') . '
+<button type="submit">Accéder</button>
+</form>';
+}
+
 function poesie_pied_html(): string
 {
     return '

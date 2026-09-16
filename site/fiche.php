@@ -25,6 +25,20 @@ $stmtCat = $pdo->prepare(
 $stmtCat->execute(['id' => $id]);
 $categories = $stmtCat->fetchAll();
 
+// Un texte rattaché à la rubrique « Personnel » ne doit pas être lisible
+// via un lien direct sans être passé par le mot de passe de la rubrique.
+$estPersonnel = false;
+foreach ($categories as $c) {
+    if ($c['slug'] === 'personnel') {
+        $estPersonnel = true;
+        break;
+    }
+}
+if ($estPersonnel && !poesie_personnel_authentifie()) {
+    header('Location: categorie.php?slug=personnel&retour=' . urlencode('fiche.php?id=' . $doc['id_interne']));
+    exit;
+}
+
 $stmtSer = $pdo->prepare(
     'SELECT s.id, s.nom FROM series s
      JOIN document_series ds ON ds.serie_id = s.id
@@ -44,20 +58,48 @@ if ($doc['contenu_inline'] !== null) {
 }
 
 $doublons = $doc['doublon_info'] !== null ? json_decode($doc['doublon_info'], true) : null;
+
+$cheminPage = 'fiche.php?id=' . $doc['id_interne'];
+$extrait = $contenu !== null ? poesie_extrait($contenu) : $doc['titre'];
+
+$jsonLd = [
+    '@context' => 'https://schema.org',
+    '@type' => 'CreativeWork',
+    'name' => $doc['titre'],
+    'url' => poesie_url($cheminPage),
+    'inLanguage' => 'fr',
+];
+if (!empty($doc['auteur'])) {
+    $jsonLd['author'] = ['@type' => 'Person', 'name' => $doc['auteur']];
+}
+if ($extrait !== '') {
+    $jsonLd['description'] = $extrait;
+}
+if (!empty($doc['date_modification'])) {
+    $jsonLd['dateModified'] = $doc['date_modification'];
+}
+if ($categories !== []) {
+    $jsonLd['genre'] = array_column($categories, 'nom');
+}
+if ($series !== []) {
+    $jsonLd['isPartOf'] = ['@type' => 'CreativeWorkSeries', 'name' => $series[0]['nom']];
+}
 ?>
 <!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?= h($doc['titre']) ?> — Corpus</title>
+<title><?= h($doc['titre']) ?><?= !empty($doc['auteur']) ? ' — ' . h($doc['auteur']) : '' ?> — Corpus</title>
+<?= poesie_meta_html($doc['titre'], $extrait, $cheminPage, 'article') ?>
+<script type="application/ld+json"><?= json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
 <style><?= POESIE_STYLE ?></style>
 </head>
 <body>
 
 <?= poesie_nav_html() ?>
 
-<main class="lecture">
+<article class="lecture">
 
 <p class="lecture-retour"><a href="liste.php">&larr; Tous les textes</a></p>
 
@@ -65,7 +107,7 @@ $doublons = $doc['doublon_info'] !== null ? json_decode($doc['doublon_info'], tr
 <p class="kicker"><?= h($doc['dossier_parent']) ?></p>
 <h1><?= h($doc['titre']) ?></h1>
 <?php if (!empty($doc['auteur'])): ?>
-<p class="lecture-auteur">par <?= h($doc['auteur']) ?></p>
+<p class="lecture-auteur"><a href="auteur.php?nom=<?= urlencode($doc['auteur']) ?>" rel="author"><?= h($doc['auteur']) ?></a></p>
 <?php endif; ?>
 <?php if ($categories !== [] || $series !== []): ?>
 <div class="pastilles">
@@ -88,7 +130,7 @@ $doublons = $doc['doublon_info'] !== null ? json_decode($doc['doublon_info'], tr
 <p class="texte-indisponible">Contenu non disponible pour ce texte.</p>
 <?php endif; ?>
 
-</main>
+</article>
 
 <?= poesie_pied_html() ?>
 
