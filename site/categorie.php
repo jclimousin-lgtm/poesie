@@ -79,6 +79,9 @@ $description = $accesAutorise
 
 <main class="page-large">
 
+<div class="layout-livres">
+<div>
+
 <p class="kicker">Entrée thématique</p>
 <h1><?= h($categorie['nom']) ?></h1>
 
@@ -94,6 +97,12 @@ $description = $accesAutorise
 </ul>
 <p class="compte"><?= count($documents) ?> texte(s) dans cette catégorie.</p>
 <?php endif; ?>
+
+</div>
+
+<?= poesie_livres_nav_html($slug) ?>
+
+</div>
 
 </main>
 

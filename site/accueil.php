@@ -34,7 +34,7 @@ $jsonLd = [
 
 <main class="page-large">
 
-<div class="accueil-layout">
+<div class="layout-livres">
 <div>
 
 <section class="hero">

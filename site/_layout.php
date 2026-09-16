@@ -348,10 +348,10 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01e
 .livres-nav-svg a { outline: none; }
 
 /* --- Mise en page accueil avec pile de livres en colonne latérale --- */
-.accueil-layout { display: grid; grid-template-columns: 1fr 225px; gap: 2.5rem; align-items: start; }
+.layout-livres { display: grid; grid-template-columns: 1fr 225px; gap: 2.5rem; align-items: start; }
 
 @media (max-width: 700px) {
-  .accueil-layout { grid-template-columns: 1fr; }
+  .layout-livres { grid-template-columns: 1fr; }
   .livres-nav { width: 170px; margin: 0 auto; }
 }
 
