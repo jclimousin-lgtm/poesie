@@ -111,6 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 .corpus-propose .corpus-form-head { display: flex; justify-content: space-between; gap: 1.6rem; border-bottom: 1px solid var(--corpus-line); padding-bottom: 1.4rem; position: relative; z-index: 1; }
 .corpus-propose .corpus-kicker { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--corpus-muted); }
 .corpus-propose .corpus-number { margin-top: 0.4rem; color: var(--corpus-red); font-family: var(--corpus-serif); font-size: 1.4rem; letter-spacing: 0.08em; }
+.corpus-propose .corpus-form-note { padding-left: 1.1rem; border-left: 1px solid var(--corpus-red); text-align: right; font-size: 0.62rem; line-height: 1.8; letter-spacing: 0.2em; text-transform: uppercase; color: var(--corpus-muted); }
+.corpus-propose .corpus-rule { width: 70px; margin-top: 0.9rem; display: block; }
 
 .corpus-propose .formulaire { position: relative; z-index: 1; padding-top: 1.4rem; }
 .corpus-propose .formulaire label { font-family: var(--corpus-serif); font-size: 0.98rem; font-weight: 400; text-transform: none; letter-spacing: normal; color: var(--corpus-ink); margin-top: 1.3rem; }
@@ -136,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   .corpus-propose .corpus-sidequote, .corpus-propose .corpus-stamp { display: none; }
   .corpus-propose .corpus-form-card { padding: 1.6rem 1.3rem; }
   .corpus-propose .corpus-form-head { flex-direction: column; gap: 0.6rem; }
+  .corpus-propose .corpus-form-note { display: none; }
 }
 </style>
 </head>
@@ -158,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Proposer un texte</h1>
     <p class="corpus-lead">Votre texte sera examiné avant toute publication.</p>
     <p>La validation reste humaine.</p>
+    <img class="corpus-rule" src="assets/corpus/rule-corpus.svg" alt="" aria-hidden="true">
   </div>
 
   <img class="corpus-stamp" src="assets/corpus/stamp-corpus.svg" alt="" aria-hidden="true">
@@ -179,6 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="corpus-kicker">Dossier de contribution</div>
       <div class="corpus-number">Nouveau texte</div>
     </div>
+    <div class="corpus-form-note">Des textes<br>Une communauté<br>Un horizon commun</div>
   </div>
 
 <form class="formulaire" method="post">
