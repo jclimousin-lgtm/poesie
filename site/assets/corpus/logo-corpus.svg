@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 180" role="img" aria-labelledby="title desc">
+  <title id="title">CORPUS</title>
+  <desc id="desc">Logo typographique CORPUS, textes, voix et fragments.</desc>
+  <rect width="760" height="180" fill="none"/>
+  <text x="8" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="94" letter-spacing="3" fill="#181715">CORP</text>
+  <text x="274" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="94" letter-spacing="3" fill="#8C3028">U</text>
+  <text x="344" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="94" letter-spacing="3" fill="#181715">S</text>
+  <line x1="279" y1="20" x2="279" y2="112" stroke="#8C3028" stroke-width="3"/>
+  <text x="11" y="135" font-family="Arial, Helvetica, sans-serif" font-size="16" letter-spacing="6" fill="#6F675D">TEXTES, VOIX &amp; FRAGMENTS</text>
+</svg>

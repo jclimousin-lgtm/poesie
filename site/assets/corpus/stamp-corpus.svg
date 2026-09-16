@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <g fill="none" stroke="#8C3028">
+    <circle cx="150" cy="150" r="126" stroke-width="3"/>
+    <circle cx="150" cy="150" r="116" stroke-width="1" stroke-dasharray="4 8"/>
+    <path d="M73 91 Q150 60 227 91 M72 209 Q150 240 228 209" stroke-width="2"/>
+  </g>
+  <g fill="#8C3028" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif">
+    <text x="150" y="120" font-size="25" letter-spacing="7">CORPUS</text>
+    <text x="150" y="151" font-size="15" letter-spacing="4">LECTURE</text>
+    <text x="150" y="176" font-size="15" letter-spacing="4">SÉLECTION</text>
+    <text x="150" y="201" font-size="15" letter-spacing="4">PUBLICATION</text>
+  </g>
+  <path d="M132 221 L168 221" stroke="#8C3028" stroke-width="3"/>
+</svg>

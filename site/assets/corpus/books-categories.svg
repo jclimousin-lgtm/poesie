@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560">
+  <g fill="#FFFDF8" stroke="#242321" stroke-width="4">
+    <path d="M45 90 Q55 73 75 76 L360 60 L374 135 L58 152 Z"/>
+    <path d="M55 160 Q67 143 87 146 L370 131 L383 207 L68 222 Z"/>
+    <path d="M64 231 Q76 214 96 218 L379 204 L391 279 L77 295 Z"/>
+    <path d="M72 302 Q84 286 104 289 L385 276 L397 352 L86 367 Z"/>
+    <path d="M80 374 Q93 357 112 361 L392 347 L402 423 L94 438 Z"/>
+    <path d="M88 446 Q101 429 120 433 L397 420 L407 494 L101 510 Z"/>
+  </g>
+  <g fill="#8C3028" font-family="Georgia, 'Times New Roman', serif" font-size="18" letter-spacing="3" text-anchor="middle">
+    <text x="210" y="118">POÉSIE</text>
+    <text x="220" y="188">SATIRE</text>
+    <text x="228" y="260">CHANSONS</text>
+    <text x="235" y="332">PASTICHES</text>
+    <text x="243" y="403">RÉFLEXION</text>
+    <text x="250" y="475">EXPÉRIMENTATION</text>
+  </g>
+  <g fill="none" stroke="#8C3028" stroke-width="2">
+    <path d="M30 526 Q80 512 130 525 T230 524 T330 526 T410 520"/>
+    <path d="M55 75 Q105 48 155 62 T255 53 T355 60"/>
+  </g>
+</svg>
